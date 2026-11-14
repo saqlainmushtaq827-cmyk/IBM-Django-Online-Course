@@ -1,0 +1,128 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Exam Results</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+</head>
+
+<body class="bg-light">
+
+<nav class="navbar navbar-dark bg-primary">
+    <div class="container">
+        <span class="navbar-brand">IBM Online Course</span>
+    </div>
+</nav>
+
+<div class="container mt-5">
+
+    {% if percentage >= 50 and total > 0 %}
+
+    <div class="alert alert-success text-center shadow-sm">
+        <h1>Congratulations!</h1>
+        <h4>You have successfully passed the mock exam.</h4>
+    </div>
+
+    {% else %}
+
+    <div class="alert alert-warning text-center">
+        <h2>Keep Practicing!</h2>
+        <p>Review your answers and try again.</p>
+    </div>
+
+    {% endif %}
+
+    <div class="card shadow-sm mb-4">
+
+        <div class="card-body text-center">
+
+            <h3>{{ course.name }}</h3>
+
+            <h5 class="mt-3">Your Exam Score</h5>
+
+            <h1 class="text-primary">
+                {{ score }} / {{ total }}
+            </h1>
+
+            <h3>{{ percentage }}%</h3>
+
+            <div class="progress mt-3">
+                <div class="progress-bar bg-success"
+                     role="progressbar"
+                     style="width: {{ percentage }}%">
+                </div>
+            </div>
+
+            <p class="mt-3">
+                Grade: {{ grade }}
+            </p>
+
+        </div>
+
+    </div>
+
+    <h3 class="mb-3">Exam Results</h3>
+
+    {% for item in results %}
+
+    <div class="card shadow-sm mb-3">
+
+        <div class="card-body">
+
+            <h5>
+                Question {{ forloop.counter }}:
+                {{ item.question.question_text }}
+            </h5>
+
+            {% if item.is_correct %}
+
+            <span class="badge bg-success">Correct Answer</span>
+
+            {% else %}
+
+            <span class="badge bg-danger">Incorrect Answer</span>
+
+            {% endif %}
+
+            <h6 class="mt-3">Your Answer:</h6>
+
+            {% for choice in item.selected %}
+            <p class="text-primary">
+                {{ choice.choice_text }}
+            </p>
+            {% empty %}
+            <p class="text-danger">No answer selected.</p>
+            {% endfor %}
+
+            <h6>Correct Answer:</h6>
+
+            {% for choice in item.correct_choices %}
+            <p class="text-success">
+                {{ choice.choice_text }}
+            </p>
+            {% endfor %}
+
+            <p class="text-muted">
+                Marks: {{ item.grade }} / {{ item.question.grade }}
+            </p>
+
+        </div>
+
+    </div>
+
+    {% endfor %}
+
+    <a href="{% url 'onlinecourse:course_details' course.id %}"
+       class="btn btn-primary mb-5">
+        Back to Course
+    </a>
+
+</div>
+
+</body>
+</html>
